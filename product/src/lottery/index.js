@@ -220,7 +220,7 @@ function bindEvent() {
       // 进入抽奖
       case "enter":
         removeHighlight();
-        addQipao(`马上抽取[${currentPrize.title}],不要走开。`);
+        addQipao(`马上抽取[${currentPrize.text}],不要走开。`);
         // rotate = !rotate;
         rotate = true;
         switchScreen("lottery");
@@ -258,7 +258,7 @@ function bindEvent() {
           // 抽奖
           lottery();
         });
-        addQipao(`正在抽取[${currentPrize.title}],调整好姿势`);
+        addQipao(`正在抽取[${currentPrize.text}],调整好姿势`);
         break;
       // 重新抽奖
       case "reLottery":
@@ -267,7 +267,7 @@ function bindEvent() {
           return;
         }
         setErrorData(currentLuckys);
-        addQipao(`重新抽取[${currentPrize.title}],做好准备`);
+        addQipao(`重新抽取[${currentPrize.text}],做好准备`);
         setLotteryStatus(true);
         // 重新抽奖则直接进行抽取，不对上一次的抽奖数据进行保存
         // 抽奖
@@ -487,7 +487,8 @@ function selectCard(duration = 600) {
 
   let text = currentLuckys.map(item => item[1]);
   addQipao(
-    `恭喜${text.join("、")}获得${currentPrize.title}, 新的一年必定旺旺旺。`
+    // `恭喜${text.join("、")}获得${currentPrize.title}, 新的一年必定旺旺旺。`
+    `恭喜${text.join("、")}获得${currentPrize.text}。`
   );
 
   selectedCardIndex.forEach((cardIndex, index) => {
