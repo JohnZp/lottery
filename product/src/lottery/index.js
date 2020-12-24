@@ -94,6 +94,7 @@ function initAll() {
       showPrizeList(currentPrizeIndex);
       let curLucks = basicData.luckyUsers[currentPrize.type];
       setPrizeData(currentPrizeIndex, curLucks ? curLucks.length : 0, true);
+      bindEvent2();
     }
   });
 
@@ -202,9 +203,8 @@ function setLotteryStatus(status = false) {
 /**
  * 事件绑定
  */
-function bindEvent() {
-
-  $('ul li').click(function(){
+function bindEvent2() {
+    $('ul li').click(function(){
     var t = parseInt($(this).attr("id").split("-")[2]);
     // for (var i = 1; i < basicData.prizes.length; i++ ) {
     //   if (i !== t) {
@@ -217,9 +217,9 @@ function bindEvent() {
     resetCard();
 
   });
+}
 
-
-
+function bindEvent() {
   document.querySelector("#menu").addEventListener("click", function (e) {
     e.stopPropagation();
     // 如果正在抽奖，则禁止一切操作
@@ -762,9 +762,9 @@ function random(num) {
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
 
-  card.innerHTML = `<div class="company">${COMPANY}<\br>江苏（南京）校友会</div><div class="name">
-    ${user[0]}
-    </div>`;
+  card.innerHTML = `<div class="company">'江苏（南京）校友会'</div><div class="name">${
+    user[0]
+  }</div><div class="details">${COMPANY}</div>`;
 }
 
 /**
