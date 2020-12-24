@@ -1,6 +1,7 @@
 import "./index.css";
 import "../css/animate.min.css";
 import "./canvas.js";
+import "../lib/jquery-1.11.3.min.js";
 import {
   addQipao,
   setPrizes,
@@ -202,6 +203,17 @@ function setLotteryStatus(status = false) {
  * 事件绑定
  */
 function bindEvent() {
+  $('ul li').click(function(){
+    $('#prize-item-1').removeClass('shine');
+    $('#prize-item-2').removeClass('shine');
+    $('#prize-item-3').removeClass('shine');
+    $('#prize-item-4').removeClass('shine');
+    $('#prize-item-5').removeClass('shine');
+    $(this).addClass('shine');
+  });
+
+
+
   document.querySelector("#menu").addEventListener("click", function (e) {
     e.stopPropagation();
     // 如果正在抽奖，则禁止一切操作
