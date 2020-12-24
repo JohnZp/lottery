@@ -139,7 +139,7 @@ router.post("/errorData", (req, res, next) => {
 router.post("/export", (req, res, next) => {
   let type = [1, 2, 3, 4, 5, defaultType],
     // outData = [["工号", "姓名", "部门"]];
-    outData = [["序号", "姓名"]];
+    outData = [["序号"]];
   cfg.prizes.forEach(item => {
     outData.push([item.text]);
     outData = outData.concat(luckyData[item.type] || []);

@@ -203,13 +203,21 @@ function setLotteryStatus(status = false) {
  * 事件绑定
  */
 function bindEvent() {
+
+
+
   $('ul li').click(function(){
-    $('#prize-item-1').removeClass('shine');
-    $('#prize-item-2').removeClass('shine');
-    $('#prize-item-3').removeClass('shine');
-    $('#prize-item-4').removeClass('shine');
-    $('#prize-item-5').removeClass('shine');
-    $(this).addClass('shine');
+    t = parseInt($(this).attr("id").split("-")[2]);
+    // for (var i = 1; i < basicData.prizes.length; i++ ) {
+    //   if (i !== t) {
+    //     $('#prize-item-' + i).removeClass('shine');
+    //   }
+    // }
+    // $(this).addClass('shine');
+    saveData2(t);
+    changePrize();
+    resetCard();
+
   });
 
 
@@ -278,14 +286,15 @@ function bindEvent() {
           addQipao(`当前还没有抽奖，无法重新抽取喔~~`);
           return;
         }
-        setErrorData(currentLuckys);
+        // setErrorData(currentLuckys);
         addQipao(`重新抽取[${currentPrize.text}],做好准备`);
         setLotteryStatus(true);
+        saveData();
         // 重新抽奖则直接进行抽取，不对上一次的抽奖数据进行保存
         // 抽奖
         resetCard().then(res => {
           // 抽奖
-          lottery();
+          lotterySingle();
         });
         break;
       // 导出抽奖结果
@@ -350,7 +359,7 @@ function createCard(user, isBold, id, showTable) {
   //添加公司标识
   // element.appendChild(createElement("company", COMPANY));
 
-  element.appendChild(createElement("name", user[1]));
+  // element.appendChild(createElement("name", user[1]));
 
   // element.appendChild(createElement("details", user[0] + "<br/>" + user[2]));
   element.appendChild(createElement("details", user[0]));
@@ -639,6 +648,44 @@ function lottery() {
   });
 }
 
+
+/**
+ * 单次重抽
+ */
+function lotterySingle() {
+  rotateBall().then(() => {
+    // 将之前的记录置空
+    currentLuckys = [];
+    selectedCardIndex = [];
+    // 当前同时抽取的数目,当前奖品抽完还可以继续抽，但是不记录数据
+    let perCount = 1,
+      luckyData = basicData.luckyUsers[currentPrize.type],
+      leftCount = basicData.leftUsers.length;
+
+    if (leftCount === 0) {
+      addQipao("人员已抽完，现在重新设置所有人员可以进行二次抽奖！");
+      basicData.leftUsers = basicData.users;
+      leftCount = basicData.leftUsers.length;
+    }
+
+    for (let i = 0; i < perCount; i++) {
+      let luckyId = random(leftCount);
+      currentLuckys.push(basicData.leftUsers.splice(luckyId, 1)[0]);
+      leftCount--;
+
+      let cardIndex = random(TOTAL_CARDS);
+      while (selectedCardIndex.includes(cardIndex)) {
+        cardIndex = random(TOTAL_CARDS);
+      }
+      selectedCardIndex.push(cardIndex);
+
+    }
+
+    // console.log(currentLuckys);
+    selectCard();
+  });
+}
+
 /**
  * 保存上一次的抽奖结果
  */
@@ -655,13 +702,39 @@ function saveData() {
 
   basicData.luckyUsers[type] = curLucky;
 
-  if (currentPrize.count <= curLucky.length) {
-    currentPrizeIndex--;
-    if (currentPrizeIndex <= -1) {
-      currentPrizeIndex = 0;
-    }
-    currentPrize = basicData.prizes[currentPrizeIndex];
+  // if (currentPrize.count <= curLucky.length) {
+  //   currentPrizeIndex--;
+  //   if (currentPrizeIndex <= -1) {
+  //     currentPrizeIndex = 0;
+  //   }
+  //   currentPrize = basicData.prizes[currentPrizeIndex];
+  // }
+
+  if (currentLuckys.length > 0) {
+    // todo by xc 添加数据保存机制，以免服务器挂掉数据丢失
+    return setData(type, currentLuckys);
   }
+  return Promise.resolve();
+}
+
+/**
+ * 保存上一次的抽奖结果
+ */
+function saveData2(t) {
+  if (!currentPrize) {
+    //若奖品抽完，则不再记录数据，但是还是可以进行抽奖
+    return;
+  }
+
+  let type = currentPrize.type,
+    curLucky = basicData.luckyUsers[type] || [];
+
+  curLucky = curLucky.concat(currentLuckys);
+
+  basicData.luckyUsers[type] = curLucky;
+
+  currentPrizeIndex = t;
+  currentPrize = basicData.prizes[currentPrizeIndex];
 
   if (currentLuckys.length > 0) {
     // todo by xc 添加数据保存机制，以免服务器挂掉数据丢失
@@ -692,8 +765,8 @@ function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
 
   card.innerHTML = `<div class="company">${COMPANY}</div><div class="name">${
-    user[1]
-  }</div><div class="details">${user[0]}<br/>${user[2] || "PSST"}</div>`;
+    ' 江苏（南京）校友会'
+  }</div><div class="details">${user[0]}}</div>`;
 }
 
 /**
