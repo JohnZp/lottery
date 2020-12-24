@@ -204,10 +204,8 @@ function setLotteryStatus(status = false) {
  */
 function bindEvent() {
 
-
-
   $('ul li').click(function(){
-    t = parseInt($(this).attr("id").split("-")[2]);
+    var t = parseInt($(this).attr("id").split("-")[2]);
     // for (var i = 1; i < basicData.prizes.length; i++ ) {
     //   if (i !== t) {
     //     $('#prize-item-' + i).removeClass('shine');
@@ -507,7 +505,7 @@ function selectCard(duration = 600) {
     }
   }
 
-  let text = currentLuckys.map(item => item[1]);
+  let text = currentLuckys.map(item => item[0]);
   addQipao(
     // `恭喜${text.join("、")}获得${currentPrize.title}, 新的一年必定旺旺旺。`
     `恭喜${text.join("、")}获得${currentPrize.text}。`
@@ -764,9 +762,9 @@ function random(num) {
 function changeCard(cardIndex, user) {
   let card = threeDCards[cardIndex].element;
 
-  card.innerHTML = `<div class="company">${COMPANY}</div><div class="name">${
-    ' 江苏（南京）校友会'
-  }</div><div class="details">${user[0]}}</div>`;
+  card.innerHTML = `<div class="company">${COMPANY}<\br>江苏（南京）校友会</div><div class="name">
+    ${user[0]}
+    </div>`;
 }
 
 /**
