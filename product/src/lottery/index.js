@@ -336,11 +336,12 @@ function createCard(user, isBold, id, showTable) {
       "rgba(0,127,127," + (Math.random() * 0.7 + 0.25) + ")";
   }
   //添加公司标识
-  element.appendChild(createElement("company", COMPANY));
+  // element.appendChild(createElement("company", COMPANY));
 
   element.appendChild(createElement("name", user[1]));
 
-  element.appendChild(createElement("details", user[0] + "<br/>" + user[2]));
+  // element.appendChild(createElement("details", user[0] + "<br/>" + user[2]));
+  element.appendChild(createElement("details", user[0]));
   return element;
 }
 
